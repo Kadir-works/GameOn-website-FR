@@ -1,23 +1,112 @@
+// Ouvre/ferme le menu de navigation en version mobile
 function editNav() {
-  var x = document.getElementById("myTopnav");
-  if (x.className === "topnav") {
-    x.className += " responsive";
+  const nav = document.getElementById("myTopnav");
+  if (nav.className === "topnav") {
+    nav.className += " responsive";
   } else {
-    x.className = "topnav";
+    nav.className = "topnav";
   }
 }
 
-// DOM Elements
-const modalbg = document.querySelector(".bground");
-const modalBtn = document.querySelectorAll(".modal-btn");
-const formData = document.querySelectorAll(".formData");
+// Sélection des éléments du DOM
+const modalbg = document.querySelector(".bground"); // Arrière-plan du modal
+const modalBtn = document.querySelectorAll(".modal-btn"); // Boutons qui ouvrent le modal
+const closeBtn = document.querySelector(".close"); // Bouton de fermeture
+const formData = document.querySelectorAll(".formData"); // Conteneurs des champs
+const form = document.querySelector("form"); // Le formulaire principal
 
-// launch modal event
+// Ouvrir le modal au clic sur un bouton
 modalBtn.forEach((btn) => btn.addEventListener("click", launchModal));
-
-// launch modal form
 function launchModal() {
   modalbg.style.display = "block";
 }
 
+// Fermer le modal quand on clique sur le bouton "X"
+closeBtn.addEventListener("click", () => {
+  modalbg.style.display = "none";
+});
 
+// Fonction de validation du formulaire
+function validate() {
+  let isValid = true;
+
+  // Récupération des champs
+  const firstName = document.getElementById("first");
+  const lastName = document.getElementById("last");
+  const email = document.getElementById("email");
+  const birthdate = document.getElementById("birthdate");
+  const quantity = document.getElementById("quantity");
+  const location = document.querySelector("input[name='location']:checked");
+  const checkbox1 = document.getElementById("checkbox1");
+
+  // Réinitialiser les messages d’erreur
+  formData.forEach((field) => {
+    field.setAttribute("data-error-visible", "false");
+  });
+
+  // Validation du prénom (au moins 2 caractères)
+  if (firstName.value.trim().length < 2) {
+    showError(firstName, "Veuillez entrer 2 caractères ou plus.");
+    isValid = false;
+  }
+
+  // Validation du nom
+  if (lastName.value.trim().length < 2) {
+    showError(lastName, "Veuillez entrer 2 caractères ou plus.");
+    isValid = false;
+  }
+
+  // Validation de l’email avec expression régulière
+  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+  if (!emailRegex.test(email.value.trim())) {
+    showError(email, "Veuillez entrer une adresse email valide.");
+    isValid = false;
+  }
+
+  // Validation de la date de naissance
+  if (!birthdate.value) {
+    showError(birthdate, "Veuillez entrer votre date de naissance.");
+    isValid = false;
+  }
+
+  // Validation du nombre de participations (champ numérique)
+  if (quantity.value === "" || isNaN(quantity.value)) {
+    showError(quantity, "Veuillez entrer une valeur numérique.");
+    isValid = false;
+  }
+
+  // Validation de la ville (une case doit être cochée)
+  if (!location) {
+    const locationField = document
+      .getElementById("location1")
+      .closest(".formData");
+    locationField.setAttribute("data-error-visible", "true");
+    locationField.setAttribute(
+      "data-error",
+      "Veuillez sélectionner une ville."
+    );
+    isValid = false;
+  }
+
+  // Validation de la case des conditions générales
+  if (!checkbox1.checked) {
+    showError(checkbox1, "Vous devez accepter les conditions.");
+    isValid = false;
+  }
+
+  // Si tout est bon, on affiche un message et on ferme le modal
+  if (isValid) {
+    alert("Merci ! Votre réservation a été reçue.");
+    modalbg.style.display = "none";
+    form.reset(); // Réinitialise les champs
+  }
+
+  return false; // Empêche la soumission normale du formulaire
+}
+
+// Affiche un message d’erreur sur un champ donné
+function showError(inputElement, message) {
+  const field = inputElement.closest(".formData");
+  field.setAttribute("data-error-visible", "true");
+  field.setAttribute("data-error", message);
+}
