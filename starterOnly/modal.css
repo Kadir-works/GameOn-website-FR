@@ -187,7 +187,15 @@ main {
   padding: 15px 8%;
   margin: 15px auto;
 }
+.confirmation-message {
+  display: none; 
+  text-align: center;
+  height: 40vh;
+}
 
+.confirmation-message p {
+  padding: 10vw 0;
+}
 label {
   font-family: var(--font-default);
   font-size: 17px;
@@ -405,7 +413,7 @@ input[data-error]::after {
   font-size: 16px;
 }
 .hero-section {
-  min-height: 93vh;
+  min-height: 70vh;
   border-radius: 10px;
   display: grid;
   grid-template-columns: repeat(12, 1fr);
@@ -485,7 +493,7 @@ footer {
   padding-right: 2vw;
   margin: 0 20px;
 }
-@media screen and (max-width: 800px) {
+@media screen and (max-width: 1024px) {
   .hero-section {
     display: block;
     box-shadow: unset;
@@ -522,6 +530,9 @@ footer {
     margin-top: 50px;
     text-align: center;
   }
+  .confirmation-message p {
+  padding: 40vw 0;
+}
 }
 
 @keyframes modalopen {

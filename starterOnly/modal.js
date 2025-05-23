@@ -14,6 +14,9 @@ const modalBtn = document.querySelectorAll(".modal-btn"); // Boutons qui ouvrent
 const closeBtn = document.querySelector(".close"); // Bouton de fermeture
 const formData = document.querySelectorAll(".formData"); // Conteneurs des champs
 const form = document.querySelector("form"); // Le formulaire principal
+// DOM Elements supplémentaires
+const confirmationMessage = document.querySelector(".confirmation-message");
+const closeConfirmationBtn = document.getElementById("close-confirmation");
 
 // Ouvrir le modal au clic sur un bouton
 modalBtn.forEach((btn) => btn.addEventListener("click", launchModal));
@@ -24,6 +27,7 @@ function launchModal() {
 // Fermer le modal quand on clique sur le bouton "X"
 closeBtn.addEventListener("click", () => {
   modalbg.style.display = "none";
+  resetModal();
 });
 
 // Fonction de validation du formulaire
@@ -94,11 +98,11 @@ function validate() {
     isValid = false;
   }
 
-  // Si tout est bon, on affiche un message et on ferme le modal
+  // Si tout est bon, on affiche un message
   if (isValid) {
-    alert("Merci ! Votre réservation a été reçue.");
-    modalbg.style.display = "none";
-    form.reset(); // Réinitialise les champs
+    // Cacher le formulaire et afficher le message
+    form.style.display = "none";
+    confirmationMessage.style.display = "block";
   }
 
   return false; // Empêche la soumission normale du formulaire
@@ -110,3 +114,26 @@ function showError(inputElement, message) {
   field.setAttribute("data-error-visible", "true");
   field.setAttribute("data-error", message);
 }
+// Fermer la modal avec le bouton "Fermer"
+closeConfirmationBtn.addEventListener("click", () => {
+  modalbg.style.display = "none";
+  resetModal();
+});
+
+// Fonction pour réinitialiser la modal
+function resetModal() {
+  form.reset(); // Vide les champs
+  form.style.display = "block"; // Réaffiche le formulaire
+  confirmationMessage.style.display = "none"; // Cache le message
+  formData.forEach((field) => {
+    field.setAttribute("data-error-visible", "false"); // Cache erreurs
+  });
+}
+
+// Quand on ouvre la modal, on reset tout pour afficher un nouveau formulaire propre
+modalBtn.forEach((btn) =>
+  btn.addEventListener("click", () => {
+    resetModal(); // Vide le formulaire, cache les erreurs et le message
+    launchModal(); // Affiche la modal
+  })
+);
